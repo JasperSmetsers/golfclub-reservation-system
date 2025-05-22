@@ -19,7 +19,6 @@ model User {
   email        String        @unique
   firstName    String?
   lastName     String?
-  phone        String?
   role         Role          @default(NON_MEMBER)
   reservations Reservation[]
   createdAt    DateTime      @default(now())
