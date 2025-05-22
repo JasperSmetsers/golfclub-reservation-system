@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  phone     String?
+  role      Role     @default(NON_MEMBER)
+  reservations Reservation[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Reservation {
+  id         String       @id @default(uuid())
+  user       User         @relation(fields: [userId], references: [id])
+  userId     String
+  slot       TeeTimeSlot  @relation(fields: [slotId], references: [id])
+  slotId     String
+  createdAt  DateTime     @default(now())
+  status     ReservationStatus @default(PENDING)
+}
+
+model TeeTimeSlot {
+  id          String       @id @default(uuid())
+  startTime   DateTime
+  endTime     DateTime
+  course      Course       @relation(fields: [courseId], references: [id])
+  courseId    String
+  reservations Reservation[]
+}
+
+model Course {
+  id       String        @id @default(uuid())
+  name     String
+  holes    Int
+  slots    TeeTimeSlot[]
+}
+
+enum Role {
+  MEMBER
+  NON_MEMBER
+  ADMIN
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
