@@ -195,6 +195,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -203,8 +204,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           String        @id\n  email        String        @unique\n  firstName    String?\n  lastName     String?\n  role         Role          @default(NON_MEMBER)\n  reservations Reservation[]\n  createdAt    DateTime      @default(now())\n  updatedAt    DateTime      @updatedAt\n}\n\nmodel Reservation {\n  id        String            @id @default(uuid())\n  user      User              @relation(fields: [userId], references: [id])\n  userId    String\n  slot      TeeTimeSlot       @relation(fields: [slotId], references: [id])\n  slotId    String\n  createdAt DateTime          @default(now())\n  status    ReservationStatus @default(PENDING)\n}\n\nmodel TeeTimeSlot {\n  id           String        @id @default(uuid())\n  startTime    DateTime\n  endTime      DateTime\n  course       Course        @relation(fields: [courseId], references: [id])\n  courseId     String\n  reservations Reservation[]\n}\n\nmodel Course {\n  id    String        @id @default(uuid())\n  name  String\n  holes Int\n  slots TeeTimeSlot[]\n}\n\nenum Role {\n  MEMBER\n  NON_MEMBER\n  ADMIN\n}\n\nenum ReservationStatus {\n  PENDING\n  CONFIRMED\n  CANCELLED\n}\n",
-  "inlineSchemaHash": "44e8aef6b111d1b21e5a89dc07f6a9257ceaf6025b72ff63fdcef99d6ebd0729",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id           String        @id\n  email        String        @unique\n  firstName    String?\n  lastName     String?\n  role         Role          @default(NON_MEMBER)\n  reservations Reservation[]\n  createdAt    DateTime      @default(now())\n  updatedAt    DateTime      @updatedAt\n}\n\nmodel Reservation {\n  id        String            @id @default(uuid())\n  user      User              @relation(fields: [userId], references: [id])\n  userId    String\n  slot      TeeTimeSlot       @relation(fields: [slotId], references: [id])\n  slotId    String\n  createdAt DateTime          @default(now())\n  status    ReservationStatus @default(PENDING)\n}\n\nmodel TeeTimeSlot {\n  id           String        @id @default(uuid())\n  startTime    DateTime\n  endTime      DateTime\n  course       Course        @relation(fields: [courseId], references: [id])\n  courseId     String\n  reservations Reservation[]\n}\n\nmodel Course {\n  id    String        @id @default(uuid())\n  name  String\n  holes Int\n  slots TeeTimeSlot[]\n}\n\nenum Role {\n  MEMBER\n  NON_MEMBER\n  ADMIN\n}\n\nenum ReservationStatus {\n  PENDING\n  CONFIRMED\n  CANCELLED\n}\n",
+  "inlineSchemaHash": "ccc59b9b8f756a0399cc4ad88d0938323416e6ebd7527224f1cecec20a8922de",
   "copyEngine": true
 }
 
